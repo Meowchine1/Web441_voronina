@@ -1,6 +1,4 @@
-﻿using Lombok.NET;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
 namespace WebMSSQL.Models
@@ -13,14 +11,12 @@ namespace WebMSSQL.Models
         [Remote(action: "CheckLogin", controller: "Start", ErrorMessage = "login уже используется")]
         public string Login { get; set; }
         public string PasswordHash { get; set; }
-        public string Salt { get; set; }
         public UserRole userRole { get; set; }
 
-        public User(string login, string passwordHash, string salt, UserRole userRole)
+        public User(string login, string passwordHash, UserRole userRole)
         {
             Login = login;
             PasswordHash = passwordHash;
-            Salt = salt;
             this.userRole = userRole;
         }
 

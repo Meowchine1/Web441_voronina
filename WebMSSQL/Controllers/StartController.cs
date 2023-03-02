@@ -14,7 +14,7 @@ namespace WebMSSQL.Controllers
 
         public IActionResult CheckLogin(string login) {
 
-            return Json(DbData.IsLoginAlreadyExcist(login));
+            return Json(DbData.IsLoginFree(login));
         }
 
         public void singUp(string login, string password) {  // зарегистрироаться 

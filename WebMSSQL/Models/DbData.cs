@@ -1,4 +1,7 @@
-﻿namespace WebMSSQL.Models
+﻿using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography;
+
+namespace WebMSSQL.Models
 {
     public static class DbData
     {
@@ -29,39 +32,44 @@
 
         }
 
+        public static bool IsLoginFree(string login)
+        {
+
+            User user = db.users.FirstOrDefault(x => x.Login == login, MockObjects.user);
+            if (user == MockObjects.user)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+
+
 
         public static bool Login(string login, string password)
         {
-            User user = db.users.FirstOrDefault(x => x.Login == login, MockObjects.user);
-
-            if (user != MockObjects.user)
+            if (IsLoginAlreadyExcist(login))
             {
+            return HashPassword.Verify(db.users.FirstOrDefault(x => x.Login == login).PasswordHash, password);
+            }
 
-                if (HashPassword.GetPasswordHash(password, user.Salt).Equals(user.PasswordHash))
-                {
-                    //залогинился
-                }
-                else
-                {
-                    // неверный пароль
-                }
-            }
-            else 
-            {
-            // такого логина нет
-            }
+            return false;
 
         }
 
 
         public static bool Registration(string login, string password)
         {
-            if(login.Trim().Length >)
+            if (login.Trim().Length > 3)
+            {
 
-            string salt = HashPassword.GetSalt();
-            string hashedPassword = HashPassword.GetPasswordHash(password, salt);
-            User user = new User(login, hashedPassword, salt, UserRole.DEFAULT);
-
+              
+                return true;
+            }
+            return false;
 
         }
 
