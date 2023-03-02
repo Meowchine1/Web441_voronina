@@ -1,0 +1,23 @@
+﻿@using WebMSSQL.Models
+@{
+    Layout = "Master.cshtml";
+}
+ 
+
+<div>
+   <h1 align="center">@ViewBag.category.Name</h1>  
+    
+</div>
+<div>
+    @foreach(Resourses r in ViewBag.Resourses)
+    {
+        <a href = "/Nornikel/Resourse/@r.path">
+               <h2 align="center">@r.name</h2>
+        </a>
+        <p class="pic">
+            <img src = "/images/@(r.Id).jpg" alt = "@r.name" width="200" height="200">
+        </p>
+
+    }
+   
+</div>
