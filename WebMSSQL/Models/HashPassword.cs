@@ -4,6 +4,8 @@ namespace WebMSSQL.Models
 {
     public static class HashPassword
     {
+        //https://stackoverflow.com/questions/4181198/how-to-hash-a-password
+
 
         public static byte[] CreatePasswordHash(string password)
         {
