@@ -6,7 +6,7 @@ namespace WebMSSQL.Models
     public class Resourses
     {
         public int Id { get; set; }
-        [StringLength(10, MinimumLength = 3, ErrorMessage = "Длина строки должна быть от 3 до 10 символов")]
+        [StringLength(50, MinimumLength = 3, ErrorMessage = "Длина строки должна быть от 3 до 10 символов")]
         public string name { get; set; }
         public string description { get; set; }
         public int CategoryId { get; set; }

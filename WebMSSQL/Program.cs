@@ -7,10 +7,11 @@ var builder = WebApplication.CreateBuilder();
 
 // получаем строку подключения из файла конфигурации
 string connection = builder.Configuration.GetConnectionString("MSSQLString");
+string localConnection = builder.Configuration.GetConnectionString("LocalConnectionString");
 
 // Add services to the container.
 builder.Services.AddHangfire(conf => 
-conf.UseSqlServerStorage("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=hangfireTest;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"));
+conf.UseSqlServerStorage(localConnection));
 builder.Services.AddHangfireServer();
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ProjectContext>(options =>
@@ -47,7 +48,7 @@ app.UseEndpoints(endpoints =>
 {
     app.MapControllerRoute(
     name: "startupPage",
-    pattern: "{controller=Access}/{action=Login}/{id?}");
+    pattern: "{controller=Start}/{action=Login}/{id?}");
 
     //app.MapControllerRoute(
     //name: "default",

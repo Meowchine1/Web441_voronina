@@ -41,18 +41,27 @@ namespace WebMSSQL.Models
 
 
         public static bool IsLoginAlreadyExcist(string login) => db.users
-            .FirstOrDefault(x => x.Login == login, MockObjects.user) == MockObjects.user ? true : false;
+            .FirstOrDefault(x => x.Login == login, MockObjects.user) != MockObjects.user ? true : false;
 
 
         public static bool IsLoginFree(string login) => db.users
             .FirstOrDefault(x => x.Login == login, MockObjects.user) == MockObjects.user ? true : false;
-       
+    
+
 
         public static bool Login(string login, string password) => IsLoginAlreadyExcist(login) ?
-            HashPassword.Verify(db.users.FirstOrDefault(x => x.Login == login).PasswordHash, password) : false;
-     
+            HashPassword.Verify(db.users.FirstOrDefault(x => x.Login == login, MockObjects.user).PasswordHash, password) : false;
 
-        public static bool Registration(string login, string password) => login.Trim().Length > 3 ? true : false;
+
+        public static void Registration(string login, string password)
+        { 
+            string passwordHash = HashPassword.CreatePasswordHash(password);
+            db.users.Add(new User(login, passwordHash, UserRole.DEFAULT));
+            db.SaveChanges();
+
+        }
+
+        public static bool IsLoginCorrect(string login) => login.Trim().Length > 3 ? true : false;
      
 
     }

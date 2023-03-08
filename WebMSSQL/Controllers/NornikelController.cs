@@ -8,6 +8,28 @@ namespace NorilskNikel.Controllers
     public class NornikelController : Controller
     {
 
+        public IActionResult Registration(string login, string password, string repeatPassword) 
+        {
+            if (password.Equals(repeatPassword)) {
+
+                if (DbData.IsLoginFree(login) && DbData.IsLoginCorrect(login)) 
+                {
+                    DbData.Registration(login, password);
+
+                    ViewBag.Categories = DbData.GetCategories();
+
+                    return View("Index");
+                }
+                 
+            }
+            return View("Startup");
+            
+        }
+
+        public IActionResult Login(string login, string password) => 
+            DbData.Login(login, password) ? View("Index") : View("Startup");
+        
+        
         public IActionResult Index(int categoryId)
         {
 

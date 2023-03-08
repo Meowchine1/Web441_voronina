@@ -7,7 +7,7 @@ namespace WebMSSQL.Models
         //https://stackoverflow.com/questions/4181198/how-to-hash-a-password
 
 
-        public static byte[] CreatePasswordHash(string password)
+        public static string CreatePasswordHash(string password)
         {
             byte[] salt;
             new RNGCryptoServiceProvider().GetBytes(salt = new byte[16]);
@@ -19,7 +19,7 @@ namespace WebMSSQL.Models
             Array.Copy(salt, 0, hashBytes, 0, 16);
             Array.Copy(hash, 0, hashBytes, 16, 20);
 
-            return hashBytes;
+            return Convert.ToBase64String(hashBytes);
         }
 
         public static bool Verify(string savedPasswordHash, string inputPassword) {

@@ -5,22 +5,18 @@ namespace WebMSSQL.Controllers
 {
     public class StartController : Controller
     {
-        private ProjectContext db = new ProjectContext();
 
-        public IActionResult startup() {
+        public IActionResult Login() 
+        {
+            return View("Startup");
+        }
+
+        public IActionResult Autorization() 
+        {
             return View();
-
         }
 
-        public IActionResult CheckLogin(string login) {
-
-            return Json(DbData.IsLoginFree(login));
-        }
-
-        public void singUp(string login, string password) {  // зарегистрироаться 
-
-            
-        }
+    
        
     }
 }
