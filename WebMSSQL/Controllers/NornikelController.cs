@@ -7,99 +7,95 @@ namespace NorilskNikel.Controllers
 {
     public class NornikelController : Controller
     {
-       
 
-        public IActionResult Index(int id)
+        public IActionResult Index(int categoryId)
         {
-            ProjectContext db = new ProjectContext();
-            ViewBag.Categories = db.categories_new.ToList();
+
+            ViewBag.Categories = DbData.GetCategories();
         
 
-            if (id == 0)
+            if (categoryId == 0)
             {
-                ViewBag.Resourses = db.resourses.ToList();
+                ViewBag.Resourses = DbData.GetResourses();
             }
             else
             {
-                ViewBag.Resourses = db.resourses.Where(x => x.CategoryId == id).ToList();
+                ViewBag.Resourses = DbData.GetResourses(categoryId);
 
             }
 
             return View();
         }
 
-        public IActionResult Resourse(string id, string name, string message) {
+
+        public IActionResult Resourse(string pathId) {
 
             ProjectContext db = new ProjectContext();
-            Resourses r = db.resourses.FirstOrDefault(x => x.path == id);
-            if (r == null)
+            Resourses r = DbData.GetResourses(pathId);
+            if (r == MockObjects.resourse)
             {
                 return NotFound();
             }
 
-            ViewBag.Categories = db.categories_new.ToList();
+            ViewBag.Categories = DbData.GetCategories();
             ViewBag.Resourse = r;
 
             return View();
            
         }   
-        public IActionResult CategoryResourses(int id) {
+
+
+        public IActionResult CategoryResourses(int categoryId) {
 
             ProjectContext db = new ProjectContext();
-            Categories category = db.categories_new.FirstOrDefault(x => x.Id == id); 
+            Categories category = DbData.GetCategories(categoryId);
  
-            if (category == null)
+            if (category == MockObjects.category)
             {
                 return NotFound();
             }
 
             ViewBag.Category = category;
-            ViewBag.Categories = db.categories_new.ToList();
-            ViewBag.Resourses = db.resourses.Where(x => x.CategoryId == id);
+            ViewBag.Categories = DbData.GetCategories();
+            ViewBag.Resourses = DbData.GetResourses(categoryId);
 
             return View();
            
         }  
+
+
         public IActionResult BuyProduct(int id) {
 
-           
 
             return View();
            
         }
+
+
         [HttpPost]
         public IActionResult Search(string request) {
 
             if (request == null)
             {
-                ProjectContext db = new ProjectContext();
                 ViewBag.flag = false;
-                ViewBag.Categories = db.categories_new.ToList();
+                ViewBag.Categories = DbData.GetCategories();
             }
             else
             {
-                ProjectContext db = new ProjectContext();
-
-                var result = db.resourses.Where(x => x.name.ToLower().Contains(request.ToLower())).ToList();
-
+                var result = DbData.SearchResourses(request.ToLower());
                 ViewBag.result = result;
                 ViewBag.flag = (result.Count() != 0)? true : false ;
-                ViewBag.Categories = db.categories_new.ToList();
+                ViewBag.Categories = DbData.GetCategories();
             }
 
             return View();
            
         }
 
-        public Resourses BestResourses()
-        {
-            ProjectContext db = new ProjectContext();
-            Random rand = new Random();
-            int toSkip = rand.Next(1, db.resourses.Count());
 
-            return db.resourses.Skip(toSkip).Take(1).FirstOrDefault();
-      
-        }
+        public Resourses BestResourses() => DbData.GetRandomResourse();
+     
+
       
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 using System.Security.Cryptography;
 
 namespace WebMSSQL.Models
@@ -8,70 +9,51 @@ namespace WebMSSQL.Models
        private static ProjectContext db = new ProjectContext();
 
 
-        public static Resourses GetResourses(string id, string name, string message) {
-            return db.resourses.FirstOrDefault(x => x.path == id, MockObjects.resourse);
+        public static Resourses GetResourses(string pathId) => db.resourses
+            .FirstOrDefault(x => x.path == pathId, MockObjects.resourse);
 
-        }
-        public static List<Categories> GetCategories()
+
+        public static Resourses GetResourses(int categoryId) => db.resourses
+            .FirstOrDefault(x => x.CategoryId == categoryId, MockObjects.resourse);
+
+
+        public static List<Resourses> GetResourses() => db.resourses.ToList();
+
+
+        public static List<Categories> GetCategories() => db.categories_new.ToList();
+
+
+        public static Categories GetCategories(int categoryId) => db.categories_new
+            .FirstOrDefault(x => x.Id == categoryId, MockObjects.category);
+
+
+        public static List<Resourses> SearchResourses(string name) => db.resourses
+            .Where(x => x.name == name).ToList();
+
+
+        public static Resourses GetRandomResourse() 
         {
-            return db.categories_new.ToList();
+            Random rand = new Random();
+            int toSkip = rand.Next(1, db.resourses.Count());
 
-        }
-
-        public static bool IsLoginAlreadyExcist (string login)
-        {
-
-            User user = db.users.FirstOrDefault(x => x.Login == login, MockObjects.user);
-            if (user != MockObjects.user)
-            {
-                return true;
-            }
-            else {
-                return false;
-            }
-
-        }
-
-        public static bool IsLoginFree(string login)
-        {
-
-            User user = db.users.FirstOrDefault(x => x.Login == login, MockObjects.user);
-            if (user == MockObjects.user)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-
+            return db.resourses.Skip(toSkip).Take(1).FirstOrDefault();
         }
 
 
-
-        public static bool Login(string login, string password)
-        {
-            if (IsLoginAlreadyExcist(login))
-            {
-            return HashPassword.Verify(db.users.FirstOrDefault(x => x.Login == login).PasswordHash, password);
-            }
-
-            return false;
-
-        }
+        public static bool IsLoginAlreadyExcist(string login) => db.users
+            .FirstOrDefault(x => x.Login == login, MockObjects.user) == MockObjects.user ? true : false;
 
 
-        public static bool Registration(string login, string password)
-        {
-            if (login.Trim().Length > 3)
-            {
+        public static bool IsLoginFree(string login) => db.users
+            .FirstOrDefault(x => x.Login == login, MockObjects.user) == MockObjects.user ? true : false;
+       
 
-              
-                return true;
-            }
-            return false;
+        public static bool Login(string login, string password) => IsLoginAlreadyExcist(login) ?
+            HashPassword.Verify(db.users.FirstOrDefault(x => x.Login == login).PasswordHash, password) : false;
+     
 
-        }
+        public static bool Registration(string login, string password) => login.Trim().Length > 3 ? true : false;
+     
 
     }
 }
